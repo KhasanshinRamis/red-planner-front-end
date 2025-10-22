@@ -10,7 +10,7 @@ export interface IUser {
 
     workInterval?: number;
     breakInterval?: number;
-    intervalsCount?: number;
+    intervalCount?: number;
 }
 
 export interface IAuthResponse {
@@ -18,4 +18,4 @@ export interface IAuthResponse {
     accessToken: string;
 }
 
-export type TypeUserForm = Omit<IUser, "id" & { password?: string }>;
+export type TypeUserForm = Omit<IUser, "id"> & { password?: string };

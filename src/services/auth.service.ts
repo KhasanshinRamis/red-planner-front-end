@@ -1,10 +1,13 @@
 import { axiosClassic } from "@/api/interceptors";
-import { IAuthForm, IAuthResponse } from "@/types/auth.types";
-import axios from "axios";
-import { removeTokenStorage, saveTokenStorage } from "./auth-tokens.service";
+import { IAuthResponse } from "@/types/auth.types";
+import { removeFromStorage, saveTokenStorage } from "./auth-tokens.service";
+import { AuthSchema } from "@/schemas/loginSchema";
+import { z } from "zod";
 
 export const authService = {
-    async main(type: "login" | "register", data: IAuthForm) {
+    async main(type: "login" | "register", data: z.infer<typeof AuthSchema>) {
+        console.log(data);
+
         const response = await axiosClassic.post<IAuthResponse>(
             `/auth/${type}`,
             data
@@ -31,7 +34,9 @@ export const authService = {
         const response = await axiosClassic.post<boolean>(`/auth/logout`);
 
         if (response.data) {
-            removeTokenStorage();
+            removeFromStorage();
         }
+
+        return response;
     },
 };

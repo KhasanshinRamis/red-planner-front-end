@@ -18,6 +18,6 @@ export const saveTokenStorage = (accessToken: string) => {
     });
 };
 
-export const removeTokenStorage = () => {
+export const removeFromStorage = () => {
     Cookies.remove(EnumTokens.ACCESS_TOKEN);
 };
