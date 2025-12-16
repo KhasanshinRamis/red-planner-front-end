@@ -4,9 +4,11 @@ import type { ITimerState } from '../timer.types'
 
 import { useLoadSettings } from './useLoadSettings'
 import { useUpdateRound } from './useUpdateRound'
+import { useUpdateSession } from './useUpdateSession'
 
 type TypeUseTimerActions = ITimerState & {
 	rounds: IPomodoroRoundResponse[] | undefined
+	sessionId: string | undefined
 }
 
 export function useTimerActions({
@@ -14,13 +16,26 @@ export function useTimerActions({
 	setIsRunning,
 	secondsLeft,
 	rounds,
-	setActiveRound
+	setActiveRound,
+	sessionId
 }: TypeUseTimerActions) {
 	const { workInterval } = useLoadSettings()
 	const { isUpdateRoundPending, updateRound } = useUpdateRound()
+	const { updateSession } = useUpdateSession()
 
 	const pauseHandler = () => {
 		setIsRunning(false)
+
+		if (sessionId) {
+			updateSession({
+				id: sessionId,
+				data: {
+					isRunning: false,
+					secondsLeft: secondsLeft,
+				}
+			})
+		}
+
 		if (!activeRound?.id) return
 
 		updateRound({
@@ -34,6 +49,16 @@ export function useTimerActions({
 
 	const playHandler = () => {
 		setIsRunning(true)
+
+		if (sessionId) {
+			updateSession({
+				id: sessionId,
+				data: {
+					isRunning: true,
+					secondsLeft: secondsLeft,
+				}
+			})
+		}
 	}
 
 	const nextRoundHandler = () => {

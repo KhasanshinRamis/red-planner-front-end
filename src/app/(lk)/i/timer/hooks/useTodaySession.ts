@@ -8,7 +8,8 @@ import { pomodoroService } from '@/services/pomodoro.service'
 
 export function useTodaySession({
 	setActiveRound,
-	setSecondsLeft
+	setSecondsLeft,
+	setIsRunning
 }: ITimerState) {
 	const { workInterval } = useLoadSettings()
 
@@ -29,7 +30,22 @@ export function useTodaySession({
 			const activeRound = rounds.find(round => !round.isCompleted)
 			setActiveRound(activeRound)
 
-			if (activeRound && activeRound?.totalSeconds !== 0) {
+			if (sessionsResponse?.data) {
+				const { isRunning, secondsLeft, updatedAt } = sessionsResponse.data
+
+				if (isRunning) {
+					const secondsPassed = Math.floor(
+						(Date.now() - new Date(updatedAt).getTime()) / 1000
+					)
+					const currentSecondsLeft = (secondsLeft ?? workInterval * 60) - secondsPassed
+
+					setSecondsLeft(currentSecondsLeft > 0 ? currentSecondsLeft : 0)
+					setIsRunning(true)
+				} else if (secondsLeft) {
+					setSecondsLeft(secondsLeft)
+					setIsRunning(false)
+				}
+			} else if (activeRound && activeRound?.totalSeconds !== 0) {
 				setSecondsLeft(activeRound.totalSeconds)
 			}
 		}

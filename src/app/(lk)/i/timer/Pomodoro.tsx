@@ -18,7 +18,11 @@ export function Pomodoro() {
 		useTodaySession(timerState)
 
 	const rounds = sessionsResponse?.data.rounds
-	const actions = useTimerActions({ ...timerState, rounds })
+	const actions = useTimerActions({
+		...timerState,
+		rounds,
+		sessionId: sessionsResponse?.data.id
+	})
 
 	const { isPending, mutate } = useCreateSession()
 	const { deleteSession, isDeletePending } = useDeleteSession(() =>
