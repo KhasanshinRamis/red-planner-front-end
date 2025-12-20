@@ -5,6 +5,10 @@ import { DASHBOARD_PAGES } from "./config/page-url.config";
 export async function middleware(request: NextRequest, response: NextResponse) {
     const { url, cookies } = request;
 
+    if (request.nextUrl.pathname === "/") {
+        return NextResponse.redirect(new URL("/i", request.url));
+    }
+
     const refreshToken = cookies.get(EnumTokens.REFRESH_TOKEN)?.value;
 
     const isAuthPage = url.includes("/auth");
