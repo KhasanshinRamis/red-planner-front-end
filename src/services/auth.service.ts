@@ -13,6 +13,8 @@ export const authService = {
             data
         );
 
+        console.log(response.data.accessToken);
+
         if (response.data.accessToken)
             saveTokenStorage(response.data.accessToken);
 
