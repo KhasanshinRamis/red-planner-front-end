@@ -56,7 +56,7 @@ export const Auth = () => {
         onSuccess: () => {
             toast.success("Вход в систему!");
             form.reset();
-            router.push(DASHBOARD_PAGES.HOME);
+            router.push("/i");
         },
         onError: (error: any) => {
             toast.error(error.response.data.message);
